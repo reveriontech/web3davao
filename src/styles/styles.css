@@ -226,11 +226,11 @@ button { font-family: inherit; }
   text-wrap: balance;
 }
 .title-grad {
-  background: linear-gradient(120deg, var(--c1) 0%, var(--c2) 50%, var(--c3) 100%);
+  background: linear-gradient(92deg, var(--c1) 0%, var(--c2) 50%, var(--c3) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  font-style: italic;
+  font-style: bold;
   font-weight: 600;
 }
 

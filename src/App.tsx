@@ -159,15 +159,15 @@ function Hero({
         </div>
 
         <h1 className="hero-title">
-          A guild for<br/>
+          A community of<br/>
           <span className="title-grad">
             web3 builders
           </span><br/>
-          in Davao.
+          and enthusiasts.
         </h1>
 
         <p className="hero-lede">
-          We are developers from the Davao Region learning web3 in public — sharing
+          We are developers and founders from the Davao Region learning web3 in public - sharing
           knowledge, shipping projects, and forwarding preseed grants from credible
           investors to the people doing the work. <em>No moonshots. No megarounds.</em>
         </p>
@@ -221,8 +221,8 @@ function GuildSection() {
       </div>
       <div className="guild-grid">
         <p className="lede">
-          web3 Davao is a local chapter of developers — students, freelancers, agency
-          devs, indie hackers — meeting weekly to learn smart contracts, zero-knowledge,
+          web3 Davao is a local chapter of developers - students, freelancers, agency
+          devs, indie hackers - meeting weekly to learn smart contracts, zero-knowledge,
           wallets, and the boring infrastructure that makes any of this real.
         </p>
         <p className="lede dim">
