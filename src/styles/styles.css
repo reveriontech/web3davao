@@ -13,6 +13,11 @@
   --card: rgba(255,255,255,0.025);
   --card-hi: rgba(255,255,255,0.05);
 
+  /* Semantic status tokens — kept separate from brand palette */
+  --error: #ff4455;
+  --error-bg: rgba(255, 68, 85, 0.08);
+  --error-border: rgba(255, 68, 85, 0.5);
+
   --font-sans: 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-display: 'Space Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -79,8 +84,27 @@ button { font-family: inherit; }
   font-size: 14px;
   color: var(--ink-dim);
 }
-.nav-links a { transition: color 0.2s; }
+.nav-links a { transition: color 0.2s; position: relative; }
 .nav-links a:hover { color: var(--ink); }
+.nav-links a.active {
+  color: var(--ink);
+}
+.nav-links a.active::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0; right: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, var(--c1), var(--c2, var(--c1)));
+  opacity: 0.8;
+}
+
+/* Mobile active state */
+.mobile-nav a.active {
+  color: var(--c1);
+  padding-left: 8px;
+}
 
 .nav-cta {
   display: inline-flex; align-items: center; gap: 8px;
@@ -88,8 +112,100 @@ button { font-family: inherit; }
   border-radius: 999px;
 }
 
+/* Hamburger — hidden on desktop */
+.nav-hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  cursor: pointer;
+  position: relative;
+  z-index: 110;
+}
+.hamburger-bar,
+.hamburger-bar::before,
+.hamburger-bar::after {
+  display: block;
+  position: absolute;
+  left: 10px;
+  width: 20px;
+  height: 2px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.2s ease;
+}
+.hamburger-bar { top: 50%; transform: translateY(-50%); }
+.hamburger-bar::before { content: ""; top: -6px; }
+.hamburger-bar::after  { content: ""; top: 6px; }
+
+/* X state */
+.hamburger-open { background: transparent; }
+.hamburger-open::before { top: 0; transform: rotate(45deg); }
+.hamburger-open::after  { top: 0; transform: rotate(-45deg); }
+
 @media (max-width: 880px) {
   .nav-links { display: none; }
+  .nav-cta   { display: none; }
+  .nav-hamburger { display: block; }
+}
+
+/* ===== MOBILE DRAWER ===== */
+.mobile-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 105;
+  background: rgba(4, 2, 8, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: fade 0.2s ease;
+}
+.mobile-drawer-inner {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: min(340px, 85vw);
+  background: var(--bg2);
+  border-left: 1px solid var(--line-strong);
+  padding: 100px 28px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  animation: drawerSlide 0.3s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes drawerSlide {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.mobile-nav a {
+  display: block;
+  padding: 18px 0;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  transition: color 0.2s, padding-left 0.2s;
+}
+.mobile-nav a:first-child { border-top: 1px solid var(--line); }
+.mobile-nav a:hover { color: var(--c1); padding-left: 8px; }
+
+.mobile-drawer-meta {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
 }
 
 /* ===== BUTTONS ===== */
@@ -516,22 +632,42 @@ button { font-family: inherit; }
 }
 
 .grants-rail {
+  overflow: hidden;
+  margin: 0 calc(var(--pad) * -1);
+  /* fade edges */
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* Inner scrolling track — contains TWO copies of the text for seamless loop */
+.grants-rail-track {
   display: flex;
-  gap: 24px;
+  gap: 40px;
   font-family: var(--font-display);
-  font-size: clamp(32px, 5vw, 64px);
+  font-size: clamp(28px, 5vw, 60px);
   font-weight: 500;
   letter-spacing: -0.03em;
   white-space: nowrap;
-  overflow: hidden;
-  margin: 0 calc(var(--pad) * -1);
-  padding: 0 var(--pad);
-  color: var(--ink-mute);
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  width: max-content;
+  animation: marquee 22s linear infinite;
 }
-.grants-rail span:nth-child(odd) { color: var(--c1); font-style: italic; }
-.grants-rail span:nth-child(even) { color: var(--ink); opacity: 0.4; }
+
+/* Pause on hover for readability */
+.grants-rail:hover .grants-rail-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grants-rail-track { animation: none; }
+}
+
+.grants-rail-track span:nth-child(odd)  { color: var(--c1); font-style: italic; }
+.grants-rail-track span:nth-child(even) { color: var(--ink); opacity: 0.4; }
 
 /* ===== MANIFESTO ===== */
 .manifesto { background: var(--bg2); }
@@ -725,7 +861,8 @@ button { font-family: inherit; }
   font-size: 10px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--c1);
+  /* Use --error (red) not --c1 (brand pink) so errors are unambiguous */
+  color: var(--error);
 }
 .field-hint {
   font-size: 12px;
@@ -748,7 +885,10 @@ button { font-family: inherit; }
 }
 .inp:focus { border-color: var(--c1); background: rgba(255,255,255,0.05); }
 .inp-area { resize: vertical; line-height: 1.5; }
-.field-err .inp { border-color: var(--c1); }
+.field-err .inp {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+}
 .char-count {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -829,7 +969,10 @@ button { font-family: inherit; }
   accent-color: var(--c1);
 }
 .check a { color: var(--c1); text-decoration: underline; text-decoration-color: rgba(255,45,138,0.4); }
-.check-err { border-color: var(--c1); }
+.check-err {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+}
 
 .modal-foot {
   display: flex; align-items: center; gap: 16px;

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react'
 import logoUrl from '@/assets/web3davao-lite.png'
+import { useReveal } from '@/hooks/useReveal'
 
 // ---------- Tweakable defaults ----------
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -89,32 +90,130 @@ function Skyline() {
   );
 }
 
+// ---------- Scroll spy hook ----------
+const NAV_SECTIONS = ["guild", "pillars", "members", "grants", "manifesto"] as const;
+
+function useScrollSpy() {
+  const [active, setActive] = useState("");
+
+  useEffect(() => {
+    const els = NAV_SECTIONS
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    if (els.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // pick the entry with the largest intersection ratio
+        let best: IntersectionObserverEntry | null = null;
+        for (const e of entries) {
+          if (e.isIntersecting && (!best || e.intersectionRatio > best.intersectionRatio)) {
+            best = e;
+          }
+        }
+        if (best) setActive(best.target.id);
+      },
+      { rootMargin: "-30% 0px -50% 0px", threshold: [0, 0.25, 0.5] },
+    );
+
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  return active;
+}
+
 // ---------- Nav ----------
+const NAV_ITEMS: { href: string; label: string }[] = [
+  { href: "#guild",     label: "The Guild" },
+  { href: "#pillars",   label: "What we do" },
+  { href: "#members",   label: "Members" },
+  { href: "#grants",    label: "Grants" },
+  { href: "#manifesto", label: "Manifesto" },
+];
+
 function Nav({ onRegister }: { onRegister: () => void }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const active = useScrollSpy();
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <header className={`nav ${scrolled ? "nav-scrolled" : ""}`}>
-      <a href="#top" className="brand">
-        <Logo height={32} />
-        <span className="brand-word">web3<span className="brand-dot">·</span>davao</span>
-      </a>
-      <nav className="nav-links">
-        <a href="#guild">The Guild</a>
-        <a href="#pillars">What we do</a>
-        <a href="#members">Members</a>
-        <a href="#grants">Grants</a>
-        <a href="#manifesto">Manifesto</a>
-      </nav>
-      <button className="btn btn-primary nav-cta" onClick={onRegister}>
-        <span>Apply to join</span>
-        <span className="arrow">→</span>
-      </button>
-    </header>
+    <>
+      <header className={`nav ${scrolled ? "nav-scrolled" : ""}`}>
+        <a href="#top" className="brand">
+          <Logo height={32} />
+          <span className="brand-word">web3<span className="brand-dot">·</span>davao</span>
+        </a>
+        <nav className="nav-links">
+          {NAV_ITEMS.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className={active === item.href.slice(1) ? "active" : ""}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <button className="btn btn-primary nav-cta" onClick={onRegister}>
+          <span>Apply to join</span>
+          <span className="arrow">→</span>
+        </button>
+
+        {/* Hamburger toggle — visible only on mobile */}
+        <button
+          className="nav-hamburger"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+        >
+          <span className={`hamburger-bar ${menuOpen ? "hamburger-open" : ""}`} />
+        </button>
+      </header>
+
+      {/* Mobile drawer overlay */}
+      {menuOpen && (
+        <div className="mobile-drawer" onClick={closeMenu}>
+          <div className="mobile-drawer-inner" onClick={(e) => e.stopPropagation()}>
+            <nav className="mobile-nav">
+              {NAV_ITEMS.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={active === item.href.slice(1) ? "active" : ""}
+                  onClick={closeMenu}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            <button className="btn btn-primary btn-lg" onClick={() => { closeMenu(); onRegister(); }} style={{ width: '100%', justifyContent: 'center' }}>
+              <span>Apply to join</span>
+              <span className="arrow">→</span>
+            </button>
+            <div className="mobile-drawer-meta">
+              <span>N 7.07° · E 125.61°</span>
+              <span>EST. 2025</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -210,9 +309,12 @@ function Stat({ n, label }: { n: ReactNode; label: ReactNode }) {
 
 // ---------- Guild blurb ----------
 function GuildSection() {
+  const headRef  = useReveal()
+  const copy1Ref = useReveal<HTMLParagraphElement>()
+  const copy2Ref = useReveal<HTMLParagraphElement>()
   return (
     <section className="section" id="guild">
-      <div className="section-head">
+      <div className="section-head reveal" ref={headRef}>
         <span className="kicker"><span className="kicker-bar"/> 01 — The Guild</span>
         <h2 className="h2">
           Built like a guild,<br/>
@@ -220,12 +322,12 @@ function GuildSection() {
         </h2>
       </div>
       <div className="guild-grid">
-        <p className="lede">
+        <p className="lede reveal reveal--from-left" ref={copy1Ref}>
           web3 Davao is a local chapter of developers - students, freelancers, agency
           devs, indie hackers - meeting weekly to learn smart contracts, zero-knowledge,
           wallets, and the boring infrastructure that makes any of this real.
         </p>
-        <p className="lede dim">
+        <p className="lede dim reveal reveal--from-right" ref={copy2Ref}>
           We exist because Davao has the talent but not the rooms. So we built the room.
           You bring a laptop and a willingness to read the docs. We bring the mentors,
           the office hours, and the bridge to investors who only write preseed checks
@@ -264,24 +366,34 @@ const PILLARS = [
   }
 ];
 
+function PillarCard({ p, delay }: { p: typeof PILLARS[number]; delay: string }) {
+  const ref = useReveal<HTMLElement>(0.08)
+  return (
+    <article ref={ref} className={`pillar reveal reveal--scale ${delay}`}>
+      <div className="pillar-top">
+        <span className="pillar-no">{p.no}</span>
+        <span className="pillar-tag">{p.tag}</span>
+      </div>
+      <h3 className="pillar-title">{p.title}</h3>
+      <p className="pillar-body">{p.body}</p>
+      <div className="pillar-arrow">→</div>
+    </article>
+  )
+}
+
+const PILLAR_DELAYS = ['', 'reveal--delay-1', 'reveal--delay-2', 'reveal--delay-3']
+
 function Pillars() {
+  const headRef = useReveal()
   return (
     <section className="section" id="pillars">
-      <div className="section-head">
+      <div className="section-head reveal" ref={headRef}>
         <span className="kicker"><span className="kicker-bar"/> 02 — What members get</span>
         <h2 className="h2">Four things, done well.</h2>
       </div>
       <div className="pillars">
-        {PILLARS.map((p) => (
-          <article key={p.no} className="pillar">
-            <div className="pillar-top">
-              <span className="pillar-no">{p.no}</span>
-              <span className="pillar-tag">{p.tag}</span>
-            </div>
-            <h3 className="pillar-title">{p.title}</h3>
-            <p className="pillar-body">{p.body}</p>
-            <div className="pillar-arrow">→</div>
-          </article>
+        {PILLARS.map((p, i) => (
+          <PillarCard key={p.no} p={p} delay={PILLAR_DELAYS[i]} />
         ))}
       </div>
     </section>
@@ -298,10 +410,36 @@ const MEMBERS = [
   { name: "Sage M.",      handle: "@sagely",      role: "Move · 2y",            proj: "Pamilya",  desc: "Multi-sig family treasuries for OFW remittances.",                color: 2 },
 ];
 
+function MemberCard({ m, palette }: { m: typeof MEMBERS[number]; palette: string[] }) {
+  const ref = useReveal<HTMLElement>(0.08)
+  return (
+    <article ref={ref} className="member reveal reveal--from-left">
+      <div className="member-avatar" style={{
+        background: `linear-gradient(135deg, ${palette[m.color]}, ${palette[(m.color+1)%3]})`
+      }}>
+        <span>{m.name.split(" ").map(s => s[0]).join("")}</span>
+      </div>
+      <div className="member-body">
+        <div className="member-line">
+          <strong>{m.name}</strong>
+          <span className="member-handle">{m.handle}</span>
+          <span className="member-role">{m.role}</span>
+        </div>
+        <div className="member-proj">
+          <span className="proj-label">working on</span>
+          <span className="proj-name">{m.proj}</span>
+        </div>
+        <p className="member-desc">{m.desc}</p>
+      </div>
+    </article>
+  )
+}
+
 function MemberFeed({ palette }: { palette: string[] }) {
+  const headRef = useReveal()
   return (
     <section className="section" id="members">
-      <div className="section-head">
+      <div className="section-head reveal" ref={headRef}>
         <span className="kicker"><span className="kicker-bar"/> 03 — The roster</span>
         <h2 className="h2">
           People doing the work,<br/>
@@ -315,25 +453,7 @@ function MemberFeed({ palette }: { palette: string[] }) {
 
       <div className="members">
         {MEMBERS.map((m, i) => (
-          <article key={i} className="member">
-            <div className="member-avatar" style={{
-              background: `linear-gradient(135deg, ${palette[m.color]}, ${palette[(m.color+1)%3]})`
-            }}>
-              <span>{m.name.split(" ").map(s => s[0]).join("")}</span>
-            </div>
-            <div className="member-body">
-              <div className="member-line">
-                <strong>{m.name}</strong>
-                <span className="member-handle">{m.handle}</span>
-                <span className="member-role">{m.role}</span>
-              </div>
-              <div className="member-proj">
-                <span className="proj-label">working on</span>
-                <span className="proj-name">{m.proj}</span>
-              </div>
-              <p className="member-desc">{m.desc}</p>
-            </div>
-          </article>
+          <MemberCard key={i} m={m} palette={palette} />
         ))}
       </div>
     </section>
@@ -342,12 +462,15 @@ function MemberFeed({ palette }: { palette: string[] }) {
 
 // ---------- Grants ----------
 function GrantsSection({ palette }: { palette: string[] }) {
+  const headRef = useReveal()
+  const copyRef = useReveal<HTMLDivElement>()
+  const cardRef = useReveal<HTMLDivElement>()
   return (
     <section className="section grants-section" id="grants">
       <div className="grants-bg" aria-hidden="true" style={{
         background: `radial-gradient(40% 60% at 80% 20%, ${palette[0]}33, transparent 70%), radial-gradient(40% 60% at 20% 80%, ${palette[2]}33, transparent 70%)`
       }}/>
-      <div className="section-head">
+      <div className="section-head reveal" ref={headRef}>
         <span className="kicker"><span className="kicker-bar"/> 04 — Grants</span>
         <h2 className="h2">
           Preseed only.<br/>
@@ -356,7 +479,7 @@ function GrantsSection({ palette }: { palette: string[] }) {
       </div>
 
       <div className="grants-grid">
-        <div className="grants-copy">
+        <div className="grants-copy reveal reveal--from-left" ref={copyRef}>
           <p className="lede">
             We forward applications to a small bench of investors who write $2k–$25k
             checks for code that's already running on a testnet. That's the ceiling.
@@ -368,7 +491,7 @@ function GrantsSection({ palette }: { palette: string[] }) {
           </p>
         </div>
 
-        <div className="grants-card">
+        <div className="grants-card reveal reveal--from-right" ref={cardRef}>
           <div className="grants-card-row">
             <span>Check size</span>
             <strong>$2k — $25k</strong>
@@ -396,23 +519,37 @@ function GrantsSection({ palette }: { palette: string[] }) {
         </div>
       </div>
 
-      <div className="grants-rail">
-        <span>NO MEGAROUNDS</span><span>·</span>
-        <span>NO POINTS FARMING</span><span>·</span>
-        <span>NO TOKEN PRE-MINES</span><span>·</span>
-        <span>NO MOONSHOTS</span><span>·</span>
-        <span>SHIP FIRST</span><span>·</span>
-        <span>NO MEGAROUNDS</span><span>·</span>
-        <span>NO POINTS FARMING</span><span>·</span>
-        <span>NO TOKEN PRE-MINES</span><span>·</span>
-        <span>NO MOONSHOTS</span><span>·</span>
-        <span>SHIP FIRST</span><span>·</span>
+      <div className="grants-rail" aria-hidden="true">
+        <div className="grants-rail-track">
+          {/* Copy 1 */}
+          <span>NO MEGAROUNDS</span><span>·</span>
+          <span>NO POINTS FARMING</span><span>·</span>
+          <span>NO TOKEN PRE-MINES</span><span>·</span>
+          <span>NO MOONSHOTS</span><span>·</span>
+          <span>SHIP FIRST</span><span>·</span>
+          {/* Copy 2 — identical, creates seamless loop */}
+          <span>NO MEGAROUNDS</span><span>·</span>
+          <span>NO POINTS FARMING</span><span>·</span>
+          <span>NO TOKEN PRE-MINES</span><span>·</span>
+          <span>NO MOONSHOTS</span><span>·</span>
+          <span>SHIP FIRST</span><span>·</span>
+        </div>
       </div>
     </section>
   );
 }
 
 // ---------- Manifesto ----------
+function ManifestoLine({ line, index }: { line: string; index: number }) {
+  const ref = useReveal<HTMLLIElement>(0.1)
+  return (
+    <li ref={ref} className="reveal reveal--from-left" style={{ transitionDelay: `${index * 0.07}s` }}>
+      <span className="m-no">{String(index + 1).padStart(2, "0")}</span>
+      <span className="m-text">{line}</span>
+    </li>
+  )
+}
+
 function Manifesto() {
   const lines = [
     "We are developers first. Investors second. Founders, maybe, later.",
@@ -423,18 +560,16 @@ function Manifesto() {
     "We critique each other's code before we praise each other's decks.",
     "We document everything. The next dev in Davao starts where we left off."
   ];
+  const headRef = useReveal()
   return (
     <section className="section manifesto" id="manifesto">
-      <div className="section-head">
+      <div className="section-head reveal" ref={headRef}>
         <span className="kicker"><span className="kicker-bar"/> 05 — Manifesto</span>
         <h2 className="h2">Seven rules of the guild.</h2>
       </div>
       <ol className="manifesto-list">
         {lines.map((l, i) => (
-          <li key={i}>
-            <span className="m-no">{String(i + 1).padStart(2, "0")}</span>
-            <span className="m-text">{l}</span>
-          </li>
+          <ManifestoLine key={i} line={l} index={i} />
         ))}
       </ol>
     </section>
@@ -950,41 +1085,43 @@ export default function App() {
       <Footer onRegister={() => setOpenReg(true)} />
       <RegisterModal open={openReg} onClose={() => setOpenReg(false)} palette={palette} />
 
-      <TweaksPanel title="Tweaks">
-        <TweakSection title="Accent palette">
-          <TweakColor
-            label="Pick a palette"
-            value={t.palette}
-            options={[PALETTES.sunset, PALETTES.magenta, PALETTES.cyber, PALETTES.emerald]}
-            onChange={(v) => setTweak("palette", v)}
-          />
-        </TweakSection>
-        <TweakSection title="Hero">
-          <TweakRadio
-            label="Treatment"
-            value={t.heroVariant}
-            options={[
-              { value: "fluid",   label: "Fluid" },
-              { value: "skyline", label: "Skyline" },
-              { value: "grid",    label: "Grid" }
-            ]}
-            onChange={(v) => setTweak("heroVariant", v)}
-          />
-          <TweakToggle label="Motion" value={t.motion} onChange={(v) => setTweak("motion", v)} />
-        </TweakSection>
-        <TweakSection title="Surface">
-          <TweakRadio
-            label="Density"
-            value={t.density}
-            options={[
-              { value: "compact",    label: "Compact" },
-              { value: "comfortable",label: "Comfort" }
-            ]}
-            onChange={(v) => setTweak("density", v)}
-          />
-          <TweakToggle label="Film grain" value={t.grain} onChange={(v) => setTweak("grain", v)} />
-        </TweakSection>
-      </TweaksPanel>
+      {import.meta.env.DEV && (
+        <TweaksPanel title="Tweaks">
+          <TweakSection title="Accent palette">
+            <TweakColor
+              label="Pick a palette"
+              value={t.palette}
+              options={[PALETTES.sunset, PALETTES.magenta, PALETTES.cyber, PALETTES.emerald]}
+              onChange={(v) => setTweak("palette", v)}
+            />
+          </TweakSection>
+          <TweakSection title="Hero">
+            <TweakRadio
+              label="Treatment"
+              value={t.heroVariant}
+              options={[
+                { value: "fluid",   label: "Fluid" },
+                { value: "skyline", label: "Skyline" },
+                { value: "grid",    label: "Grid" }
+              ]}
+              onChange={(v) => setTweak("heroVariant", v)}
+            />
+            <TweakToggle label="Motion" value={t.motion} onChange={(v) => setTweak("motion", v)} />
+          </TweakSection>
+          <TweakSection title="Surface">
+            <TweakRadio
+              label="Density"
+              value={t.density}
+              options={[
+                { value: "compact",    label: "Compact" },
+                { value: "comfortable",label: "Comfort" }
+              ]}
+              onChange={(v) => setTweak("density", v)}
+            />
+            <TweakToggle label="Film grain" value={t.grain} onChange={(v) => setTweak("grain", v)} />
+          </TweakSection>
+        </TweaksPanel>
+      )}
     </div>
   );
 }
