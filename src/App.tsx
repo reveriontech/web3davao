@@ -257,6 +257,14 @@ function Hero({
           <span>Membership · Cohort 01</span>
         </div>
 
+        <div className="hero-mobile-meta">
+          <span>N 7.07° · E 125.61°</span>
+          <span className="meta-sep">·</span>
+          <span>EST. 2025</span>
+          <span className="meta-sep">·</span>
+          <span>GUILD/01</span>
+        </div>
+
         <h1 className="hero-title">
           A community of<br/>
           <span className="title-grad">
@@ -422,7 +430,14 @@ function MemberCard({ m, palette }: { m: typeof MEMBERS[number]; palette: string
       <div className="member-body">
         <div className="member-line">
           <strong>{m.name}</strong>
-          <span className="member-handle">{m.handle}</span>
+          <a
+            href={`https://github.com/${m.handle.replace('@', '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="member-handle"
+          >
+            {m.handle}
+          </a>
           <span className="member-role">{m.role}</span>
         </div>
         <div className="member-proj">

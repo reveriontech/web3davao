@@ -414,6 +414,27 @@ button { font-family: inherit; }
 .side-tick::before { content: ""; width: 24px; height: 1px; background: var(--ink-mute); }
 @media (max-width: 880px) { .hero-side { display: none; } }
 
+.hero-mobile-meta {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: -16px;
+  margin-bottom: 32px;
+}
+.hero-mobile-meta .meta-sep {
+  color: var(--line-strong);
+}
+@media (max-width: 880px) {
+  .hero-mobile-meta {
+    display: flex;
+  }
+}
+
 /* ===== SECTIONS ===== */
 .section {
   position: relative;
@@ -552,7 +573,15 @@ button { font-family: inherit; }
   margin-bottom: 8px;
 }
 .member-line strong { font-size: 16px; }
-.member-handle { font-family: var(--font-mono); font-size: 12px; color: var(--ink-mute); }
+.member-handle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-mute);
+  transition: color 0.2s ease;
+}
+.member-handle:hover {
+  color: var(--c1);
+}
 .member-role {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -577,7 +606,7 @@ button { font-family: inherit; }
   font-family: var(--font-display);
   font-size: 17px;
   font-weight: 500;
-  color: var(--c1);
+  color: var(--ink);
 }
 .member-desc {
   font-size: 13.5px;
