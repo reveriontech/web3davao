@@ -487,7 +487,7 @@ button { font-family: inherit; }
 /* ===== PILLARS ===== */
 .pillars {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
@@ -532,6 +532,7 @@ button { font-family: inherit; }
   transition: transform 0.2s;
 }
 .pillar:hover .pillar-arrow { transform: translateX(6px); }
+@media (max-width: 1200px) { .pillars { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 1000px) { .pillars { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px)  { .pillars { grid-template-columns: 1fr; } }
 

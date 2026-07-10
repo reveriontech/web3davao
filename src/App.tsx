@@ -91,7 +91,12 @@ function Skyline() {
 }
 
 // ---------- Scroll spy hook ----------
-const NAV_SECTIONS = ["guild", "pillars", "members", "grants", "manifesto"] as const;
+const NAV_SECTIONS = ["guild", "pillars", "members", "pathways", "manifesto"] as const;
+
+const REGISTRATION_EMAILS = {
+  to: "reveriontech@gmail.com",
+  cc: ["rod@reveriontech.com", "hello@reveriontech.com"],
+} as const;
 
 function useScrollSpy() {
   const [active, setActive] = useState("");
@@ -126,10 +131,10 @@ function useScrollSpy() {
 
 // ---------- Nav ----------
 const NAV_ITEMS: { href: string; label: string }[] = [
-  { href: "#guild",     label: "The Guild" },
-  { href: "#pillars",   label: "What we do" },
-  { href: "#members",   label: "Members" },
-  { href: "#grants",    label: "Grants" },
+  { href: "#guild",     label: "The community" },
+  { href: "#pillars",   label: "What we offer" },
+  { href: "#members",   label: "Builders" },
+  { href: "#pathways",  label: "Pathways" },
   { href: "#manifesto", label: "Manifesto" },
 ];
 
@@ -171,7 +176,7 @@ function Nav({ onRegister }: { onRegister: () => void }) {
           ))}
         </nav>
         <button className="btn btn-primary nav-cta" onClick={onRegister}>
-          <span>Apply to join</span>
+          <span>Join the community</span>
           <span className="arrow">→</span>
         </button>
 
@@ -203,7 +208,7 @@ function Nav({ onRegister }: { onRegister: () => void }) {
               ))}
             </nav>
             <button className="btn btn-primary btn-lg" onClick={() => { closeMenu(); onRegister(); }} style={{ width: '100%', justifyContent: 'center' }}>
-              <span>Apply to join</span>
+              <span>Join the community</span>
               <span className="arrow">→</span>
             </button>
             <div className="mobile-drawer-meta">
@@ -252,9 +257,9 @@ function Hero({
       <div className="hero-inner">
         <div className="eyebrow">
           <span className="dot" style={{ background: c1 }} />
-          <span>Davao Region · Mindanao · PH</span>
+          <span>Community · Davao Region</span>
           <span className="eyebrow-sep">/</span>
-          <span>Membership · Cohort 01</span>
+          <span>Builders helping builders</span>
         </div>
 
         <div className="hero-mobile-meta">
@@ -262,45 +267,46 @@ function Hero({
           <span className="meta-sep">·</span>
           <span>EST. 2025</span>
           <span className="meta-sep">·</span>
-          <span>GUILD/01</span>
+          <span>OPEN</span>
         </div>
 
         <h1 className="hero-title">
-          A community of<br/>
+          Developers building<br/>
           <span className="title-grad">
-            web3 builders
+            solid builders
           </span><br/>
-          and enthusiasts.
+          for Davao Region.
         </h1>
 
         <p className="hero-lede">
-          We are developers and founders from the Davao Region learning web3 in public - sharing
-          knowledge, shipping projects, and forwarding preseed grants from credible
-          investors to the people doing the work. <em>No moonshots. No megarounds.</em>
+          web3 Davao is a community where developers help each other grow — sharing
+          knowledge, reviewing code, and connecting builders to hackathons, training,
+          blockchain education, AI (RAG & fine-tuning), and automation.
+          <em> No grants for now. Just real support from people who ship.</em>
         </p>
 
         <div className="hero-ctas">
           <button className="btn btn-primary btn-lg" onClick={onRegister}>
-            <span>Register your details</span>
+            <span>Join the community</span>
             <span className="arrow">→</span>
           </button>
-          <a href="#manifesto" className="btn btn-ghost btn-lg">
-            <span>Read the manifesto</span>
+          <a href="#pathways" className="btn btn-ghost btn-lg">
+            <span>See what we connect you to</span>
           </a>
         </div>
 
         <div className="hero-stats">
-          <Stat n="142" label="Builders in the chat" />
-          <Stat n="11" label="Projects in review" />
-          <Stat n="$24k" label="Preseed forwarded YTD" />
-          <Stat n="03" label="Cohorts shipped" />
+          <Stat n="5" label="Builder pathways" />
+          <Stat n="Weekly" label="Study & office hours" />
+          <Stat n="Region" label="Davao-first community" />
+          <Stat n="Peer" label="Led by developers" />
         </div>
       </div>
 
       <div className="hero-side" aria-hidden="true">
         <div className="side-tick">N 7.07° · E 125.61°</div>
         <div className="side-tick">EST. 2025</div>
-        <div className="side-tick">GUILD/01</div>
+        <div className="side-tick">GUILD/OPEN</div>
       </div>
     </section>
   );
@@ -323,23 +329,25 @@ function GuildSection() {
   return (
     <section className="section" id="guild">
       <div className="section-head reveal" ref={headRef}>
-        <span className="kicker"><span className="kicker-bar"/> 01 — The Guild</span>
+        <span className="kicker"><span className="kicker-bar"/> 01 — The community</span>
         <h2 className="h2">
-          Built like a guild,<br/>
-          not a launchpad.
+          Builders helping builders,<br/>
+          rooted in Davao.
         </h2>
       </div>
       <div className="guild-grid">
         <p className="lede reveal reveal--from-left" ref={copy1Ref}>
-          web3 Davao is a local chapter of developers - students, freelancers, agency
-          devs, indie hackers - meeting weekly to learn smart contracts, zero-knowledge,
-          wallets, and the boring infrastructure that makes any of this real.
+          web3 Davao brings together students, freelancers, agency devs, and indie
+          hackers from across the Davao Region. We learn in public — smart contracts,
+          wallets, AI pipelines, automation — and we help each other ship work that
+          actually matters locally.
         </p>
         <p className="lede dim reveal reveal--from-right" ref={copy2Ref}>
-          We exist because Davao has the talent but not the rooms. So we built the room.
-          You bring a laptop and a willingness to read the docs. We bring the mentors,
-          the office hours, and the bridge to investors who only write preseed checks
-          for things that should actually exist.
+          We do not run a grant program yet. What we do is connect you to hackathon
+          opportunities, structured training, blockchain education, hands-on AI work
+          (RAG and fine-tuning), and automation/orchestration practice. You bring
+          curiosity and a laptop. We bring mentors, office hours, and a room full
+          of people who have been where you are.
         </p>
       </div>
     </section>
@@ -350,27 +358,33 @@ function GuildSection() {
 const PILLARS = [
   {
     no: "01",
-    title: "Share knowledge",
-    body: "Weekly study halls on Solidity, Move, Rust, ZK, account abstraction. Talks recorded and indexed. Notes in the open repo. No gatekeeping, no 'alpha leaks'.",
-    tag: "study-hall"
+    title: "Hackathon links",
+    body: "We surface regional and global hackathons worth your time, help you form teams, and prep you before demo day — so you show up ready, not scrambling.",
+    tag: "hackathons"
   },
   {
     no: "02",
-    title: "Show off projects",
-    body: "Demo Fridays. You ship the smallest honest version of your idea. The guild critiques the code, the UX, and the premise — in that order.",
-    tag: "demo-friday"
+    title: "Builder training",
+    body: "Structured sessions on shipping real projects: repos, CI, testing, deployment, and the habits that turn side projects into portfolio pieces.",
+    tag: "training"
   },
   {
     no: "03",
-    title: "Ideate together",
-    body: "Open jam sessions where engineers pair with engineers, not pitch decks. We map problems in the region first, then ask if web3 actually helps.",
-    tag: "jam"
+    title: "Blockchain education",
+    body: "Study halls on Solidity, wallets, L2s, and on-chain tooling. Talks recorded, notes shared openly. No gatekeeping, no fake alpha.",
+    tag: "web3-edu"
   },
   {
     no: "04",
-    title: "Receive grants",
-    body: "Preseed-only forwarding. We connect verified builders to investors who fund small, focused work. You keep your equity. You keep your sanity.",
-    tag: "grants"
+    title: "AI · RAG · fine-tuning",
+    body: "Practical AI for builders: retrieval pipelines, embeddings, fine-tuning workflows, and when (and when not) to reach for a model.",
+    tag: "ai-lab"
+  },
+  {
+    no: "05",
+    title: "Automation & orchestration",
+    body: "Workflows, agents, and glue code that saves hours. We pair on n8n, scripts, cron jobs, and the boring automation that keeps products alive.",
+    tag: "automation"
   }
 ];
 
@@ -389,7 +403,7 @@ function PillarCard({ p, delay }: { p: typeof PILLARS[number]; delay: string }) 
   )
 }
 
-const PILLAR_DELAYS = ['', 'reveal--delay-1', 'reveal--delay-2', 'reveal--delay-3']
+const PILLAR_DELAYS = ['', 'reveal--delay-1', 'reveal--delay-2', 'reveal--delay-3', 'reveal--delay-4']
 
 function Pillars() {
   const headRef = useReveal()
@@ -397,7 +411,11 @@ function Pillars() {
     <section className="section" id="pillars">
       <div className="section-head reveal" ref={headRef}>
         <span className="kicker"><span className="kicker-bar"/> 02 — What members get</span>
-        <h2 className="h2">Four things, done well.</h2>
+        <h2 className="h2">Five pathways into building.</h2>
+        <p className="section-sub">
+          We connect you to opportunities and learning — not capital. Grants are not
+          part of the program today; growing capable builders is.
+        </p>
       </div>
       <div className="pillars">
         {PILLARS.map((p, i) => (
@@ -455,14 +473,14 @@ function MemberFeed({ palette }: { palette: string[] }) {
   return (
     <section className="section" id="members">
       <div className="section-head reveal" ref={headRef}>
-        <span className="kicker"><span className="kicker-bar"/> 03 — The roster</span>
+        <span className="kicker"><span className="kicker-bar"/> 03 — The builders</span>
         <h2 className="h2">
-          People doing the work,<br/>
+          People learning together,<br/>
           shipping in public.
         </h2>
         <p className="section-sub">
-          A sample of the current cohort. Membership is by application — we review for
-          intent, not credentials.
+          A sample of the kind of work happening in the community. Join by filling
+          out your details — we review for intent and fit, not credentials.
         </p>
       </div>
 
@@ -475,79 +493,82 @@ function MemberFeed({ palette }: { palette: string[] }) {
   );
 }
 
-// ---------- Grants ----------
-function GrantsSection({ palette }: { palette: string[] }) {
+// ---------- Pathways (no grants) ----------
+function PathwaysSection({ palette }: { palette: string[] }) {
   const headRef = useReveal()
   const copyRef = useReveal<HTMLDivElement>()
   const cardRef = useReveal<HTMLDivElement>()
   return (
-    <section className="section grants-section" id="grants">
+    <section className="section grants-section" id="pathways">
       <div className="grants-bg" aria-hidden="true" style={{
         background: `radial-gradient(40% 60% at 80% 20%, ${palette[0]}33, transparent 70%), radial-gradient(40% 60% at 20% 80%, ${palette[2]}33, transparent 70%)`
       }}/>
       <div className="section-head reveal" ref={headRef}>
-        <span className="kicker"><span className="kicker-bar"/> 04 — Grants</span>
+        <span className="kicker"><span className="kicker-bar"/> 04 — Pathways</span>
         <h2 className="h2">
-          Preseed only.<br/>
-          On purpose.
+          Doors open.<br/>
+          Grants not yet.
         </h2>
       </div>
 
       <div className="grants-grid">
         <div className="grants-copy reveal reveal--from-left" ref={copyRef}>
           <p className="lede">
-            We forward applications to a small bench of investors who write $2k–$25k
-            checks for code that's already running on a testnet. That's the ceiling.
+            We are not a funding body — at least not for now. web3 Davao is a connector:
+            we link builders to hackathons, training cohorts, education resources, AI
+            labs, and automation practice so you level up before you pitch anyone.
           </p>
           <p className="lede dim">
-            High-capital rounds turn good projects into the wrong kind of company —
-            chasing growth instead of solving problems. The guild doesn't help with
-            those. There are other rooms for that.
+            When you join, tell us which pathways matter to you. We match you to events,
+            study groups, and mentors inside the community. A proper backend is coming;
+            today your application goes straight to the team at Reverion Tech.
           </p>
         </div>
 
         <div className="grants-card reveal reveal--from-right" ref={cardRef}>
           <div className="grants-card-row">
-            <span>Check size</span>
-            <strong>$2k — $25k</strong>
+            <span>Grants</span>
+            <strong>Not offered yet</strong>
           </div>
           <div className="grants-card-row">
-            <span>Equity taken</span>
-            <strong>0 — 4%</strong>
+            <span>Hackathons</span>
+            <strong>Curated & linked</strong>
           </div>
           <div className="grants-card-row">
-            <span>Stage</span>
-            <strong>Preseed only</strong>
+            <span>Training</span>
+            <strong>Builder-focused</strong>
           </div>
           <div className="grants-card-row">
-            <span>Decision time</span>
-            <strong>14 days</strong>
+            <span>Blockchain edu</span>
+            <strong>Weekly study halls</strong>
           </div>
           <div className="grants-card-row">
-            <span>Lock-in</span>
-            <strong>None</strong>
+            <span>AI · RAG · FT</span>
+            <strong>Hands-on labs</strong>
           </div>
           <div className="grants-card-row">
-            <span>Geography</span>
-            <strong>Davao Region first</strong>
+            <span>Automation</span>
+            <strong>Workflows & agents</strong>
           </div>
         </div>
       </div>
 
       <div className="grants-rail" aria-hidden="true">
         <div className="grants-rail-track">
-          {/* Copy 1 */}
-          <span>NO MEGAROUNDS</span><span>·</span>
-          <span>NO POINTS FARMING</span><span>·</span>
-          <span>NO TOKEN PRE-MINES</span><span>·</span>
-          <span>NO MOONSHOTS</span><span>·</span>
-          <span>SHIP FIRST</span><span>·</span>
-          {/* Copy 2 — identical, creates seamless loop */}
-          <span>NO MEGAROUNDS</span><span>·</span>
-          <span>NO POINTS FARMING</span><span>·</span>
-          <span>NO TOKEN PRE-MINES</span><span>·</span>
-          <span>NO MOONSHOTS</span><span>·</span>
-          <span>SHIP FIRST</span><span>·</span>
+          <span>LEARN TOGETHER</span><span>·</span>
+          <span>SHIP IN PUBLIC</span><span>·</span>
+          <span>NO GRANTS YET</span><span>·</span>
+          <span>HACKATHONS</span><span>·</span>
+          <span>TRAINING</span><span>·</span>
+          <span>AI · RAG · FT</span><span>·</span>
+          <span>AUTOMATION</span><span>·</span>
+          <span>LEARN TOGETHER</span><span>·</span>
+          <span>SHIP IN PUBLIC</span><span>·</span>
+          <span>NO GRANTS YET</span><span>·</span>
+          <span>HACKATHONS</span><span>·</span>
+          <span>TRAINING</span><span>·</span>
+          <span>AI · RAG · FT</span><span>·</span>
+          <span>AUTOMATION</span><span>·</span>
         </div>
       </div>
     </section>
@@ -567,20 +588,20 @@ function ManifestoLine({ line, index }: { line: string; index: number }) {
 
 function Manifesto() {
   const lines = [
-    "We are developers first. Investors second. Founders, maybe, later.",
+    "We are developers first. We help each other before we pitch anything.",
     "We learn in public and we ship in public.",
-    "We do not optimize for fundraising. We optimize for working code.",
-    "We forward preseed only — small checks for small, honest scope.",
-    "We refuse rounds that turn builders into salespeople.",
+    "We connect builders to hackathons, training, and education — not grants (yet).",
+    "We teach blockchain, AI, and automation with honest scope and working examples.",
     "We critique each other's code before we praise each other's decks.",
-    "We document everything. The next dev in Davao starts where we left off."
+    "We grow the Davao builder bench — one study hall, one demo, one pairing at a time.",
+    "We document everything. The next dev in the region starts where we left off."
   ];
   const headRef = useReveal()
   return (
     <section className="section manifesto" id="manifesto">
       <div className="section-head reveal" ref={headRef}>
         <span className="kicker"><span className="kicker-bar"/> 05 — Manifesto</span>
-        <h2 className="h2">Seven rules of the guild.</h2>
+        <h2 className="h2">Seven rules of the community.</h2>
       </div>
       <ol className="manifesto-list">
         {lines.map((l, i) => (
@@ -596,9 +617,18 @@ const TRACKS = [
   { id: "smart",   label: "Smart contracts",  icon: "{}" },
   { id: "front",   label: "Frontend / wallets", icon: "⌥" },
   { id: "infra",   label: "Infra / indexing", icon: "≡" },
-  { id: "zk",      label: "ZK / cryptography", icon: "∎" },
+  { id: "ai",      label: "AI / RAG / ML",    icon: "◎" },
+  { id: "auto",    label: "Automation",       icon: "↻" },
   { id: "design",  label: "Design / UX",      icon: "◐" },
   { id: "learning",label: "Just learning",    icon: "?"  }
+];
+
+const PATHWAY_INTERESTS = [
+  { id: "hackathons", label: "Hackathon opportunities" },
+  { id: "training",   label: "Builder training" },
+  { id: "blockchain", label: "Blockchain education" },
+  { id: "ai",         label: "AI · RAG · fine-tuning" },
+  { id: "automation", label: "Automation & orchestration" },
 ];
 
 const LEVELS = [
@@ -613,12 +643,39 @@ type RegForm = {
   city: string
   github: string
   tracks: string[]
+  pathways: string[]
   level: string
   project: string
   project_url: string
   why: string
-  grant: boolean
   code_of_conduct: boolean
+}
+
+async function sendRegistration(form: RegForm) {
+  const payload = {
+    _subject: `web3 Davao — Join request: ${form.name}`,
+    _cc: REGISTRATION_EMAILS.cc.join(","),
+    _captcha: "false",
+    _template: "table",
+    name: form.name,
+    email: form.email,
+    city: form.city,
+    github: form.github || "(not provided)",
+    skill_tracks: form.tracks.join(", ") || "(none)",
+    pathways: form.pathways.join(", ") || "(none)",
+    level: form.level,
+    project: form.project || "(none)",
+    project_url: form.project_url || "(none)",
+    why: form.why,
+  }
+
+  const res = await fetch(`https://formsubmit.co/ajax/${REGISTRATION_EMAILS.to}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(payload),
+  })
+
+  if (!res.ok) throw new Error("submit_failed")
 }
 
 function RegisterModal({
@@ -632,16 +689,18 @@ function RegisterModal({
 }) {
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [form, setForm] = useState<RegForm>({
     name: "", email: "", city: "Davao City", github: "",
-    tracks: [], level: "", project: "", project_url: "",
-    why: "", grant: false, code_of_conduct: false
+    tracks: [], pathways: [], level: "", project: "", project_url: "",
+    why: "", code_of_conduct: false
   });
   const [errors, setErrors] = useState<Partial<Record<keyof RegForm, string>>>({});
 
   useEffect(() => {
     if (!open) {
-      setTimeout(() => { setStep(0); setSubmitted(false); setErrors({}); }, 300);
+      setTimeout(() => { setStep(0); setSubmitted(false); setSubmitting(false); setSubmitError(""); setErrors({}); }, 300);
     }
   }, [open]);
 
@@ -658,6 +717,10 @@ function RegisterModal({
     ...f,
     tracks: f.tracks.includes(id) ? f.tracks.filter((t) => t !== id) : [...f.tracks, id],
   }));
+  const togglePathway = (id: string) => setForm((f) => ({
+    ...f,
+    pathways: f.pathways.includes(id) ? f.pathways.filter((p) => p !== id) : [...f.pathways, id],
+  }));
 
   const validate = () => {
     const e: Partial<Record<keyof RegForm, string>> = {};
@@ -668,6 +731,7 @@ function RegisterModal({
     }
     if (step === 1) {
       if (form.tracks.length === 0) e.tracks = "Pick at least one";
+      if (form.pathways.length === 0) e.pathways = "Pick at least one";
       if (!form.level) e.level = "Pick one";
     }
     if (step === 2) {
@@ -680,7 +744,19 @@ function RegisterModal({
 
   const next = () => { if (validate()) setStep(s => Math.min(s + 1, 2)); };
   const back = () => setStep(s => Math.max(s - 1, 0));
-  const submit = () => { if (validate()) setSubmitted(true); };
+  const submit = async () => {
+    if (!validate()) return;
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      await sendRegistration(form);
+      setSubmitted(true);
+    } catch {
+      setSubmitError("Could not send your details. Please try again or email us directly.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   if (!open) return null;
 
@@ -690,7 +766,7 @@ function RegisterModal({
         <div className="modal-head">
           <div className="modal-brand">
             <Logo height={22} />
-            <span>Membership · Cohort 01</span>
+            <span>Join · web3 Davao</span>
           </div>
           <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
@@ -758,6 +834,18 @@ function RegisterModal({
                     </div>
                   </Field>
 
+                  <Field label="Pathways you want in on" error={errors.pathways}>
+                    <div className="chips">
+                      {PATHWAY_INTERESTS.map(p => (
+                        <button key={p.id} type="button"
+                          className={`chip ${form.pathways.includes(p.id) ? "chip-on" : ""}`}
+                          onClick={() => togglePathway(p.id)}>
+                          <span>{p.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </Field>
+
                   <Field label="Where you're at" error={errors.level}>
                     <div className="levels">
                       {LEVELS.map(l => (
@@ -784,23 +872,20 @@ function RegisterModal({
 
               {step === 2 && (
                 <div className="form-step">
-                  <h3 className="form-h">Why you're here.</h3>
-                  <Field label="What do you want out of the guild?" error={errors.why} hint="Two or three sentences. Be specific.">
+                  <h3 className="form-h">Why you're joining.</h3>
+                  <Field label="What do you want from the community?" error={errors.why} hint="Two or three sentences. Be specific about hackathons, training, or skills you want to grow.">
                     <textarea className="inp inp-area" rows={5}
                       value={form.why} onChange={e => set("why", e.target.value)}
-                      placeholder="I'm trying to ship X but I keep getting stuck on Y. I'd like to pair with someone who's done Z, and I want feedback on my contracts before mainnet."/>
+                      placeholder="I'm building X and want help with Y. I'd like hackathon teammates, feedback on my contracts, and to learn RAG pipelines from someone who's shipped one."/>
                     <div className="char-count">{form.why.length} chars</div>
                   </Field>
 
-                  <label className="check">
-                    <input type="checkbox" checked={form.grant} onChange={e => set("grant", e.target.checked)}/>
-                    <span>I want my project considered for preseed grant forwarding ($2k–$25k).</span>
-                  </label>
-
                   <label className={`check ${errors.code_of_conduct ? "check-err" : ""}`}>
                     <input type="checkbox" checked={form.code_of_conduct} onChange={e => set("code_of_conduct", e.target.checked)}/>
-                    <span>I've read and agree to the <a href="#manifesto" onClick={(e) => e.preventDefault()}>guild manifesto & code of conduct</a>.</span>
+                    <span>I've read and agree to the <a href="#manifesto" onClick={(e) => e.preventDefault()}>community manifesto & code of conduct</a>.</span>
                   </label>
+
+                  {submitError && <p className="field-error" style={{ textAlign: "center" }}>{submitError}</p>}
                 </div>
               )}
             </>
@@ -816,7 +901,9 @@ function RegisterModal({
             {step < 2 ? (
               <button className="btn btn-primary" onClick={next}>Continue <span className="arrow">→</span></button>
             ) : (
-              <button className="btn btn-primary" onClick={submit}>Submit application <span className="arrow">→</span></button>
+              <button className="btn btn-primary" onClick={submit} disabled={submitting}>
+                {submitting ? "Sending…" : "Submit & join"} <span className="arrow">→</span>
+              </button>
             )}
           </div>
         )}
@@ -869,19 +956,19 @@ function SubmittedView({
           <Logo height={56} />
         </div>
       </div>
-      <h3 className="submitted-h">Application received, {form.name.split(" ")[0] || "builder"}.</h3>
+      <h3 className="submitted-h">You're on the list, {form.name.split(" ")[0] || "builder"}.</h3>
       <p className="submitted-sub">
-        We'll review within <strong>14 days</strong> and email <strong>{form.email}</strong>.
-        If you opted in for grant forwarding, expect a separate intro from one of the
-        preseed investors on our bench.
+        Your details were sent to the web3 Davao team. We'll review and reach out at{" "}
+        <strong>{form.email}</strong> with next steps — study hall invites, hackathon
+        links, or a pairing based on the pathways you picked.
       </p>
       <div className="submitted-meta">
         <div>
           <span>Reference</span>
           <strong>{refCode}</strong>
         </div>
-        <div><span>Cohort</span><strong>01 · 2025</strong></div>
-        <div><span>Next study hall</span><strong>Sat · 2pm · online</strong></div>
+        <div><span>Status</span><strong>Received</strong></div>
+        <div><span>Next</span><strong>Team follow-up</strong></div>
       </div>
       <button className="btn btn-primary btn-lg" onClick={onClose}>Close</button>
     </div>
@@ -895,10 +982,10 @@ function Footer({ onRegister }: { onRegister: () => void }) {
       <div className="footer-cta">
         <h2 className="footer-h">
           Davao builds.<br/>
-          <span className="title-grad">You should be on the list.</span>
+          <span className="title-grad">Come learn with us.</span>
         </h2>
         <button className="btn btn-primary btn-lg" onClick={onRegister}>
-          <span>Register your details</span>
+          <span>Join the community</span>
           <span className="arrow">→</span>
         </button>
       </div>
@@ -907,32 +994,32 @@ function Footer({ onRegister }: { onRegister: () => void }) {
         <div>
           <Logo height={32}/>
           <p className="footer-small">
-            A developer guild based in Davao Region, Philippines.<br/>
-            Operated by members. Funded by no-one in particular.
+            A developer community for the Davao Region, Philippines.<br/>
+            Peer-led. Pathway-focused. No grants — yet.
           </p>
         </div>
         <div>
-          <div className="footer-title">Guild</div>
+          <div className="footer-title">Community</div>
           <a href="#guild">About</a>
-          <a href="#pillars">What we do</a>
+          <a href="#pillars">What we offer</a>
           <a href="#manifesto">Manifesto</a>
         </div>
         <div>
-          <div className="footer-title">Members</div>
-          <a href="#members">Roster</a>
-          <a href="#grants">Grants</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); onRegister(); }}>Apply</a>
+          <div className="footer-title">Builders</div>
+          <a href="#members">Examples</a>
+          <a href="#pathways">Pathways</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); onRegister(); }}>Join</a>
         </div>
         <div>
-          <div className="footer-title">Where</div>
-          <a href="#">Discord / Telegram</a>
-          <a href="#">GitHub org</a>
-          <a href="#">Saturday study hall</a>
+          <div className="footer-title">Contact</div>
+          <a href="mailto:reveriontech@gmail.com">reveriontech@gmail.com</a>
+          <a href="mailto:rod@reveriontech.com">rod@reveriontech.com</a>
+          <a href="mailto:hello@reveriontech.com">hello@reveriontech.com</a>
         </div>
       </div>
 
       <div className="footer-base">
-        <span>© 2025 web3 Davao · Built by members</span>
+        <span>© 2026 web3 Davao · A Reverion Tech initiative</span>
         <span>N 7.07° · E 125.61°</span>
       </div>
     </footer>
@@ -1095,7 +1182,7 @@ export default function App() {
       <GuildSection />
       <Pillars />
       <MemberFeed palette={palette} />
-      <GrantsSection palette={palette} />
+      <PathwaysSection palette={palette} />
       <Manifesto />
       <Footer onRegister={() => setOpenReg(true)} />
       <RegisterModal open={openReg} onClose={() => setOpenReg(false)} palette={palette} />
